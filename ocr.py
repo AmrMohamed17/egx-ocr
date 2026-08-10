@@ -1,25 +1,33 @@
-"""PaddleOCR wrapper. Loads the model once, reads a cell, cleans numerics.
-DRAFT — verify with tools/smoke_ocr.py before building on this."""
+"""OCR wrapper (EasyOCR backend). Loads once, reads a cell, cleans numerics.
+Engine is isolated here — grid/detect/capture never touch it, so swapping
+backends only changes this file."""
+
 import re
 
-_ocr = None
+_reader = None
 
 def _engine():
-    global _ocr
-    if _ocr is None:
-        from paddleocr import PaddleOCR
-        # English/latin model is enough for the numeric columns.
-        _ocr = PaddleOCR(use_angle_cls=False, lang="en", show_log=False)
-    return _ocr
+    global _reader
+    if _reader is None:
+        import easyocr
+        # English covers the numeric columns; CPU mode on the 82FG.
+        _reader = easyocr.Reader(["en"], gpu=False)
+    return _reader
 
 def read_raw(cell_bgr):
-    result = _engine().ocr(cell_bgr, cls=False)
-    if not result or not result[0]:
-        return ""
-    # concatenate any text lines found in the cell
-    return " ".join(line[1][0] for line in result[0])
+    import cv2
+    # first pass: no upscaling (cleaner on normal cells)
+    result = _engine().readtext(cell_bgr, detail=0)
+    text = " ".join(result) if result else ""
+
+    # fallback: only if the read looks failed (empty or a lone stray char),
+    # retry upscaled — helps thin single digits without hurting normal cells
+    if len(text.strip()) < 1:
+        big = cv2.resize(cell_bgr, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+        result = _engine().readtext(big, detail=0)
+        text = " ".join(result) if result else ""
+
+    return text
 
 def clean_number(text):
-    """Keep digits, comma, dot. TODO: finalize per-column rules after smoke test."""
-    t = re.sub(r"[^0-9.,]", "", text)
-    return t
+    return re.sub(r"[^0-9.,]", "", text)

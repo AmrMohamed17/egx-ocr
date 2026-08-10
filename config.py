@@ -34,3 +34,7 @@ SAVE_ONLY_CHANGES = True    # skip saving identical frames
 # --- content / torn detection ---
 DARK_THRESHOLD = 120        # pixel < this = "text ink"
 CONTENT_FRAC   = 0.01       # >1% ink in a cell = has content
+
+# --- canonical company-name list (app's exact spellings) ---
+NAMES_XLSX  = BASE_DIR / "data" / "co_names.xlsx"
+NAMES_SHEET = "From Mistws"

@@ -2,5 +2,7 @@ mss
 numpy
 opencv-python
 matplotlib
-paddlepaddle
-paddleocr
+easyocr
+rapidfuzz
+pandas
+openpyxl
