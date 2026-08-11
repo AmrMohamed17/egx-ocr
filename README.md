@@ -15,14 +15,18 @@ built to be compared against the app's exported history for an accuracy figure.
     .venv\Scripts\activate            # Windows
     pip install -r requirements.txt
 
-EasyOCR model files must be in `~/.EasyOCR/model/` (auto-download, or place
-manually if the network blocks it):
-- `craft_mlt_25k.pth` (detection, shared)
-- `english_g2.pth`    (numbers)
-- `arabic_g1.pth`     (names)
+EasyOCR model files must be in `~/.EasyOCR/model/`. They auto-download on first
+use; if the network blocks it (SSL cert errors on fresh Windows), download
+manually in a browser, unzip, and place the .pth files there:
 
-Canonical company list: place the names xlsx at `data/co_names.xlsx`
-(sheet `From Mistws`, one column of names).
+- Detection (shared):  craft_mlt_25k.pth
+  https://github.com/JaidedAI/EasyOCR/releases/download/pre-v1.1.6/craft_mlt_25k.zip
+- Numbers (English):   english_g2.pth
+  https://github.com/JaidedAI/EasyOCR/releases/download/v1.3/english_g2.zip
+- Names (Arabic):      arabic_g1.pth
+  https://github.com/JaidedAI/EasyOCR/releases/download/pre-v1.1.6/arabic.zip
+
+Full model hub: https://www.jaided.ai/easyocr/modelhub/
 
 ## Setup (GPU / CUDA) — for the fast box
 Install CUDA-enabled PyTorch FIRST (EasyOCR won't pull it automatically):
