@@ -1,8 +1,11 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
 data/captures/
 data/db/
 data/ground_truth/
 output/
-__pycache__/
-*.pyc
-.venv/
-venv/
+# keep fixtures and the canonical list tracked:
+!data/co_names.xlsx
+!tests/fixtures/

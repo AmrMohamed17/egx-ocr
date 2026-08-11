@@ -1,6 +1,4 @@
-"""Central configuration. Every calibrated number lives here and nowhere else.
-If the trading window moves or you run on a different machine, re-run
-tools/calibrate_grid.py and update ONLY this file."""
+"""Central configuration. Every calibrated number and mode switch lives here."""
 import pathlib
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
@@ -13,28 +11,37 @@ GRID_CHECK_DIR   = BASE_DIR / "output" / "grid_checks"
 REPORTS_DIR      = BASE_DIR / "output" / "reports"
 FIXTURES_DIR     = BASE_DIR / "tests" / "fixtures"
 
-# --- screen capture region (All Trades window on screen) ---
-# NOTE: screen coordinates. Valid only while the window stays put.
+# --- MODE SWITCHES ---
+# READ_MODE: "full"      -> OCR every row each frame (max accuracy via voting)
+#            "new_rows"   -> OCR only new rows via pixel-anchor (max speed)
+READ_MODE = "full"
+# USE_GPU: True on a CUDA machine (big speedup). False forces CPU.
+USE_GPU   = False
+
+# --- screen capture region (maximized All Trades window) ---
 REGION = {"top": 95, "left": 8, "width": 545, "height": 820}
 
-# --- calibrated grid (maximized window, from tools/calibrate_grid.py) ---
+# --- calibrated grid (maximized window) ---
 COL_X   = [50, 127, 208, 281, 431, 535]   # column boundaries, left -> right
-ROW_TOP = 29                              # y of first data row top
-ROW_H   = 31.5                            # row height in px
-N_ROWS  = 25                              # rows to read per frame
+ROW_TOP = 29
+ROW_H   = 31.5
+N_ROWS  = 25
 
 COL_NAMES = ["%Change", "Vol", "Price", "Name", "Time"]
-# columns that must be non-empty for a row to count as complete:
 REQUIRED  = ["Vol", "Price", "Name", "Time"]
 
-# --- capture loop ---
-TARGET_FPS        = 5       # captures per second
-SAVE_ONLY_CHANGES = True    # skip saving identical frames
+# --- capture / stitch ---
+TARGET_FPS        = 5
+SAVE_ONLY_CHANGES = True
+MIN_RUN           = 4       # overlap rows to confirm anchor (tune live)
 
-# --- content / torn detection ---
-DARK_THRESHOLD = 120        # pixel < this = "text ink"
-CONTENT_FRAC   = 0.01       # >1% ink in a cell = has content
+# --- detection thresholds ---
+DARK_THRESHOLD = 120
+CONTENT_FRAC   = 0.01
 
-# --- canonical company-name list (app's exact spellings) ---
+# --- name matching / validation ---
+CHANGE_LIMIT = 20.0         # EGX daily move limit; |%change| beyond => misread
+
+# --- canonical company-name list ---
 NAMES_XLSX  = BASE_DIR / "data" / "co_names.xlsx"
 NAMES_SHEET = "From Mistws"
