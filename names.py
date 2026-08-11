@@ -37,7 +37,7 @@ def _canon():
 def match_name(ocr_text):
     """Return (canonical_name, score, ok). ok=False => flag/reject the row."""
     text = _normalize(ocr_text)
-    if not text:
+    if not text.strip():                    # empty (incl. after time-strip) => flag
         return (None, 0.0, False)
     cmap, keys = _canon()
     key, score, _ = process.extractOne(text, keys, scorer=fuzz.WRatio)

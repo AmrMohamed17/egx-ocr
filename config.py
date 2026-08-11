@@ -15,13 +15,13 @@ FIXTURES_DIR     = BASE_DIR / "tests" / "fixtures"
 
 # --- screen capture region (All Trades window on screen) ---
 # NOTE: screen coordinates. Valid only while the window stays put.
-REGION = {"top": 103, "left": 1073, "width": 560, "height": 816}
+REGION = {"top": 95, "left": 8, "width": 545, "height": 820}
 
-# --- calibrated grid (from tools/calibrate_grid.py) ---
-COL_X   = [5, 117, 200, 275, 425, 514]   # column boundaries, left -> right
-ROW_TOP = 64                             # y of first data row top
-ROW_H   = 31.5                           # row height in px (keep the fraction!)
-N_ROWS  = 23                             # rows to read per frame
+# --- calibrated grid (maximized window, from tools/calibrate_grid.py) ---
+COL_X   = [50, 127, 208, 281, 431, 535]   # column boundaries, left -> right
+ROW_TOP = 29                              # y of first data row top
+ROW_H   = 31.5                            # row height in px
+N_ROWS  = 25                              # rows to read per frame
 
 COL_NAMES = ["%Change", "Vol", "Price", "Name", "Time"]
 # columns that must be non-empty for a row to count as complete:

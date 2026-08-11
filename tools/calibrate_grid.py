@@ -4,7 +4,7 @@ import matplotlib; matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt, matplotlib.image as mpimg, numpy as np
 import config
 
-IMG_PATH = str(config.FIXTURES_DIR / "clean.png")   # a rescued complete frame
+IMG_PATH = str(config.FIXTURES_DIR / "region_test.png")   # a rescued complete frame
 
 COL_X, ROW_TOP, ROW_H, N_ROWS = list(config.COL_X), config.ROW_TOP, config.ROW_H, config.N_ROWS
 img = mpimg.imread(IMG_PATH); H, W = img.shape[:2]

@@ -28,7 +28,7 @@ def change_sign(cell):
     return (-1 if rc > bc else 1), rc, bc
 
 # ---- main ----
-IMG = str(config.FIXTURES_DIR / "torn.png")
+IMG = str(config.FIXTURES_DIR / "region_test.png")
 img = cv2.imread(IMG)
 if img is None:
     raise SystemExit(f"cannot read {IMG}")
