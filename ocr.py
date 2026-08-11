@@ -4,6 +4,7 @@
 Grid/detect never touch the engine — swapping backends only changes this file."""
 import re
 import cv2
+import config
 
 _reader_en = None
 _reader_ar = None
@@ -39,21 +40,20 @@ def _keep_arabic(text):
     """Drop non-Arabic tokens (time fragments that bleed in from the wider crop)."""
     return " ".join(t for t in text.split() if re.search(r"[\u0600-\u06FF]", t))
 
-def read_name(img, i, col_x, row_top, row_h, name_col=3):
-    """Read the Arabic name cell for row i. Normal crop first; if empty, retry a
-    wider crop (short right-aligned/faint names sit near the Name/Time boundary)
-    and strip any time fragments that bleed in."""
-    top = int(round(row_top + i * row_h))
-    bot = int(round(row_top + (i + 1) * row_h))
-    x0, x1 = col_x[name_col], col_x[name_col + 1]
+def read_name(img, i, name_col=3):
+    """Arabic name cell for row i. Normal crop first; if empty, retry wider
+    (fixed reach 461 — short/faint names near the Name/Time boundary) and strip
+    time fragments that bleed in."""
+    from grid import row_bounds
+    top, bot = row_bounds(i)
+    x0 = config.COL_X[name_col]
+    x1 = config.COL_X[name_col + 1]
 
-    crop = img[top:bot, x0:x1]
-    result = _engine_ar().readtext(crop, detail=0)
+    result = _engine_ar().readtext(img[top:bot, x0:x1], detail=0)
     text = " ".join(result) if result else ""
-
     if not text.strip():
-        wide = img[top:bot, x0:461]           # extend right, past the boundary
-        result = _engine_ar().readtext(wide, detail=0)
+        result = _engine_ar().readtext(img[top:bot, x0:461], detail=0)
         text = _keep_arabic(" ".join(result) if result else "")
+    return text
 
     return text
