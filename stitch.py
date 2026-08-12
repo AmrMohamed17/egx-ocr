@@ -2,6 +2,7 @@
 - add_frame():    full-read mode. Content-anchor + voting (repairs flagged rows).
 - add_new_rows(): new-rows mode. Prepend already-read new rows (no voting).
 Never dedup by content; only by scroll position via the anchor."""
+import config
 
 def _key(row):
     if row is None or row["status"] == "empty": return None
@@ -29,7 +30,12 @@ class Stitcher:
 
     def add_frame(self, frame):
         rows = _data_rows(frame)
-        if not rows: return
+        if not rows:
+            return
+        # skip partial/mid-repaint frames: too few rows to be a full window.
+        # they break the anchor chain without adding real data. Keep prev anchor.
+        if self.prev is not None and len(rows) < config.N_ROWS * 0.6:
+            return
         if self.prev is None:
             self.day = list(rows); self.prev = rows; return
         k, run = find_overlap(self.prev, rows, self.min_run)

@@ -15,6 +15,9 @@ if not folder:
 
 cap_dir = config.CAPTURES_DIR / folder
 frames = sorted(cap_dir.glob("*.png"))
+limit = int(sys.argv[2]) if len(sys.argv) > 2 else None
+if limit:
+    frames = frames[:limit]
 print(f"processing {len(frames)} frames from {folder}  MODE={config.READ_MODE}\n")
 
 st = Stitcher(min_run=config.MIN_RUN)
