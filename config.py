@@ -31,7 +31,7 @@ COL_NAMES = ["%Change", "Vol", "Price", "Name", "Time"]
 REQUIRED  = ["Vol", "Price", "Name", "Time"]
 
 # --- capture / stitch ---
-TARGET_FPS        = 5
+TARGET_FPS        = 15
 SAVE_ONLY_CHANGES = True
 MIN_RUN           = 4       # overlap rows to confirm anchor (tune live)
 
