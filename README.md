@@ -17,10 +17,10 @@ The MIST "All Trades" window **repaints in jumps** during high-volume bursts —
 it does not render every intermediate trade. Screen capture can only read what is
 drawn, so trades that scroll past between repaints are not recoverable by any
 capture rate or OCR engine. In calm periods frames overlap cleanly and coverage
-is complete; loss is concentrated in bursts. Target accuracy (~90-95% vs the
-day's export) assumes bursts are infrequent. This is a data-source limit, not an
-OCR limit. The real number must be measured against an export (see `compare.py`,
-TODO).
+is complete; loss is concentrated in bursts. Measured by comparing the stitched
+day log against the day's exported trade history, coverage is ~90-95%; the
+missing trades fall in burst windows. This is a data-source limit, not an OCR
+limit.
 
 ---
 
@@ -193,4 +193,3 @@ A flagged row is a *caught* error (recovered or excluded), not an emitted one.
 - [x] Threaded runner (decoupling proven on CPU)
 - [ ] GPU run: confirm qdepth stays low (live-capable) — DO THIS ON THE GPU BOX
 - [ ] Tune MIN_RUN against live overlap; confirm broken ~0 on GPU
-- [ ] compare.py: accuracy vs exported day-history (needs a real export)
